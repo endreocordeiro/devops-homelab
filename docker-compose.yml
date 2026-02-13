@@ -1,0 +1,30 @@
+services:
+
+  db:
+    image: postgres:16
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: devops
+      POSTGRES_PASSWORD: devops123
+      POSTGRES_DB: appdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./docker/backend
+    container_name: backend-app
+    restart: always
+    ports:
+    - "5000:5000"
+    
+    environment:
+      DB_HOST: db
+      POSTGRES_DB: appdb
+      POSTGRES_USER: devops
+      POSTGRES_PASSWORD: devops123
+    depends_on:
+    - db
+
+volumes:
+  postgres_data:
